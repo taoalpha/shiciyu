@@ -1,0 +1,16 @@
+.DS_Store
+node_modules/**/*
+npm-debug.*
+*.jks
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+web-build/
+web-report/
+*-lock.json
+*.lock
+
+.expo
+.expo-shared
+.watchmanconfig
