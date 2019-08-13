@@ -3,6 +3,9 @@ import {ActivityIndicator , StyleSheet, Text, View, ScrollView, RefreshControl, 
 import poemService from "../services/Poem";
 import { Colors } from "../constants";
 import { Header } from "./Header";
+import { Icon, Overlay } from 'react-native-elements'
+import {LabelEditor} from "./LabelEditor";
+// import console = require('console');
 
 const styles = StyleSheet.create({
   container: {
@@ -16,6 +19,16 @@ const styles = StyleSheet.create({
     paddingLeft: 15,
     paddingTop: 30,
     paddingBottom: 30
+  },
+  labelIcon: {
+    position: 'absolute',
+    top: 50,
+    right: 60,
+  },
+  favoriteIcon: {
+    position: 'absolute',
+    top: 50,
+    right: 20,
   },
   closeButton: {
     marginTop: 20,
@@ -39,30 +52,89 @@ export function PoemCard(props) {
   const [isLoading, setLoading] = useState(true);
   const [currentPoem, setPoem] = useState(null);
   const [webUrl, setWebUrl] = useState("");
+  const [isLabelEditorOpen, setLabelEditorOpen] = useState(false);
 
   useEffect(() => {
     poemService.switchType(props.type).then(() => {
       setLoading(false);
-      setPoem(poemService.random());
+
+      if (!poemService.isEmpty) {
+        setPoem({...poemService.random()});
+      }
     });
-  }, [props.type])
+
+    const listener = props.navigation.addListener("didFocus", () => {
+      poemService.switchType(props.type).then(() => {
+        if (!poemService.isEmpty) {
+          // make sure we get the latest state of the poem from poemService
+          setPoem(curPoem => {
+            if (curPoem) {
+              return {...poemService.getPoem(curPoem)};
+            } else {
+              return {...poemService.random()};
+            }
+          });
+        }
+      });
+    });
+    return () => listener.remove();
+  }, [props.type]);
 
   let PoemCard = (<View style={styles.container}>
-    {currentPoem && < ScrollView contentContainerStyle={styles.contentContainer}
+    {currentPoem && <ScrollView contentContainerStyle={styles.contentContainer}
       refreshControl={
         <RefreshControl
           refreshing={isLoading}
           onRefresh={() => {
-            setPoem(poemService.random());
+            setPoem({...poemService.random()});
           }}
         />
       } >
+      <Icon
+       containerStyle={styles.labelIcon}
+       name='label'
+       color='white'
+       onPress={() => {
+         // add / remove labels
+         setLabelEditorOpen(prev => !prev);
+       }}
+      />
+
+      { isLabelEditorOpen && (
+      <Overlay
+        isVisible
+        height={100}
+        onBackdropPress={() => setLabelEditorOpen(false)}>
+        <LabelEditor
+          poem={currentPoem}
+        ></LabelEditor>
+      </Overlay>
+      )}
+  
+      <Icon
+       containerStyle={styles.favoriteIcon}
+       name={currentPoem.isFavorite ? 'favorite' : 'favorite-border'}
+       color={currentPoem.isFavorite ? 'red' : 'white'}
+       onPress={() => {
+         let promise;
+         if (!currentPoem.isFavorite) {
+           promise = poemService.favorite(currentPoem);
+         } else {
+           promise = poemService.unFavorite(currentPoem);
+         }
+         promise.then(poem => {
+            setPoem(poem ? {...poem} : null);
+         });
+       }}
+      />
       <Header
         level="h2"
         onLongPress={() => {
           setWebUrl("https://www.google.com/search?q=" + encodeURI(`${currentPoem.title} ${currentPoem.author || ""}`));
         }}
-        style={{ color: Colors.white }}>{currentPoem.title || currentPoem.rhythmic}</Header>
+        style={{ color: Colors.white }}>
+        {currentPoem.title || currentPoem.rhythmic}
+      </Header>
       <Header
        level="h5"
        style={{ fontStyle: "italic", color: Colors.chinaGray, lineHeight: 24, paddingBottom: 10 }}>
@@ -90,6 +162,24 @@ export function PoemCard(props) {
 
   if (isLoading) {
     return (<View style={styles.container}><ActivityIndicator style={styles.contentContainer} size="large" color="#ddd" /></View>);
+  } else if (poemService.isEmpty) {
+    return (<View style={styles.container}>
+      <ScrollView contentContainerStyle={styles.contentContainer}
+        refreshControl={
+          <RefreshControl
+            refreshing={isLoading}
+            onRefresh={() => {
+              setPoem(poemService.isEmpty ? null: {...poemService.random()});
+            }}
+          />
+        } >
+        <Header
+         level="h5"
+         style={{ fontStyle: "italic", color: Colors.chinaGray, lineHeight: 24, paddingBottom: 10 }}>
+           尚未添加任何数据!
+         </Header>
+      </ScrollView>
+    </View>);
   } else if (webUrl) {
     return WebViewCard;
   } else {

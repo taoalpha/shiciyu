@@ -1,6 +1,6 @@
 import { Words } from "../constants";
 import { createDrawerNavigator, createStackNavigator, createAppContainer } from "react-navigation";
-import { BeforeLoad, XieHouYu, ChengYu, Offline, Shi, Ci, Settings } from "./screens";
+import { BeforeLoad, XieHouYu, ChengYu, Offline, Shi, Ci, Settings, Favorite } from "./screens";
 
 const SettingsScreen = createStackNavigator(
     {
@@ -35,18 +35,37 @@ const AppNavigator = createDrawerNavigator({
     Shi: {
         path: '/shi',
         screen: Shi,
+        navigationOptions: {
+            drawerLabel: Words.shi,
+        }, 
     },
     Ci: {
         path: '/ci',
         screen: Ci,
+        navigationOptions: {
+            drawerLabel: Words.ci,
+        }, 
     },
     ChengYu: {
         path: "/chengyu",
-        screen: ChengYu
+        screen: ChengYu,
+        navigationOptions: {
+            drawerLabel: Words.chengyu,
+        }, 
     },
     XieHouYu: {
         path: "/xiehouyu",
-        screen: XieHouYu
+        screen: XieHouYu,
+        navigationOptions: {
+            drawerLabel: Words.xiehouyu,
+        },
+    },
+    Favorite: {
+        path: "/favorite",
+        screen: Favorite,
+        navigationOptions: {
+            drawerLabel: Words.favorite,
+        },
     },
     Settings: {
         path: '/settings',

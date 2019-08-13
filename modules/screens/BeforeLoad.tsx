@@ -26,9 +26,10 @@ async function loadAndFetchMeta() {
 export function BeforeLoad(props) {
     const [isLoading, setLoading] = useState(true);
 
-    Promise.all([AsyncStorage.getItem('lastActiveRoute'), AsyncStorage.getItem('userHistories'), loadAndFetchMeta()])
-        .then(([path, histories]) => {
+    Promise.all([AsyncStorage.getItem('lastActiveRoute'), AsyncStorage.getItem('userHistories'), AsyncStorage.getItem('userOpinions'), loadAndFetchMeta()])
+        .then(([path, histories, opinions]) => {
             if (histories) poemService.histories = JSON.parse(histories);
+            if (opinions) poemService.opinions = JSON.parse(opinions);
             props.navigation.navigate(path);
             setLoading(false);
         })

@@ -7,6 +7,7 @@ export default {
   ge: "歌",
   chengyu: "成语",
   xiehouyu: "歇后语",
+  favorite: "我的收藏",
   settings: "设置",
 
   // settings subscreens

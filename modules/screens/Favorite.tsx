@@ -1,8 +1,8 @@
 import React from "react";
 import { PoemCard } from "../../components/PoemCard";
 
-export function Shi(props) {
+export function Favorite(props) {
     return (
-        <PoemCard type={"Shi"} navigation={props.navigation} />
+        <PoemCard type={"Favorite"} navigation={props.navigation} />
     );
 }
