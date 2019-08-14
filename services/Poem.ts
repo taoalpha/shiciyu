@@ -84,8 +84,8 @@ class PoemService {
     } else if (type === "XieHouYu") {
       return await this.getDBWith("xiehouyu.", LOCAL_XIEHOUYU);
     } else if (type.startsWith("Labels.")) {
-      const label = type.substr(7, type.length).toLowerCase();
-      this.currentActiveDB = this.opinions.labeled[label];
+      const label = type.substr(7, type.length);
+      this.currentActiveDB = this.opinions.labeled[label] || [];
       this.currentActiveDBName = label;
       return this.currentActiveDBName;
     } else if (type === "Favorite") {
@@ -269,6 +269,10 @@ class PoemService {
     await AsyncStorage.setItem("userOpinions", JSON.stringify(this.opinions));
     this.attachState(poem);
     return poem;
+  }
+
+  getAllLabels() {
+    return Object.keys(this.opinions.labeled).map(label => ({label, total: this.opinions.labeled[label].length}));
   }
 
   getSeven() {

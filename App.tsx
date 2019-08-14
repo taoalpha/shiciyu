@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { AppLoading } from 'expo';
-import poemService from "./services/Poem";
 import { Asset } from 'expo-asset'
 import * as Font from 'expo-font'
 import { Ionicons } from '@expo/vector-icons';
@@ -63,7 +62,7 @@ export default function App() {
           const currentScreen = getActiveRouteName(currentState);
           const prevScreen = getActiveRouteName(prevState);
 
-          if (prevScreen !== currentScreen) {
+          if (prevScreen !== currentScreen && currentScreen !== "LabelDetail") {
             AsyncStorage.setItem('lastActiveRoute', currentScreen);
           }
         }}

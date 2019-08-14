@@ -5,7 +5,6 @@ import { Colors } from "../constants";
 import { Header } from "./Header";
 import { Icon, Overlay } from 'react-native-elements'
 import {LabelEditor} from "./LabelEditor";
-// import console = require('console');
 
 const styles = StyleSheet.create({
   container: {
@@ -103,7 +102,7 @@ export function PoemCard(props) {
       { isLabelEditorOpen && (
       <Overlay
         isVisible
-        height={100}
+        height='auto'
         onBackdropPress={() => setLabelEditorOpen(false)}>
         <LabelEditor
           poem={currentPoem}

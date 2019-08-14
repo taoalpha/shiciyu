@@ -9,6 +9,7 @@ export default {
   xiehouyu: "歇后语",
   favorite: "我的收藏",
   settings: "设置",
+  labels: "我的标签",
 
   // settings subscreens
   offline: "离线数据库",

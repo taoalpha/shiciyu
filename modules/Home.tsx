@@ -1,7 +1,28 @@
 import { Words } from "../constants";
 import { createDrawerNavigator, createStackNavigator, createAppContainer } from "react-navigation";
-import { BeforeLoad, XieHouYu, ChengYu, Offline, Shi, Ci, Settings, Favorite } from "./screens";
+import { BeforeLoad, Labels, LabelDetail, XieHouYu, ChengYu, Offline, Shi, Ci, Settings, Favorite } from "./screens";
 
+const LabelScreen = createStackNavigator(
+    {
+        Main: {
+            screen: Labels,
+            navigationOptions: {
+                title: Words.labels,
+            }
+        },
+        LabelDetail: {
+            screen: LabelDetail,
+            navigationOptions: ({navigation}) => ({
+                title: navigation.state.params.label,
+            })
+        },
+    },
+    {
+        navigationOptions: {
+            title: Words.labels,
+        }
+    }
+);
 const SettingsScreen = createStackNavigator(
     {
         Main: {
@@ -66,6 +87,10 @@ const AppNavigator = createDrawerNavigator({
         navigationOptions: {
             drawerLabel: Words.favorite,
         },
+    },
+    Labels: {
+        path: "/labels",
+        screen: LabelScreen,
     },
     Settings: {
         path: '/settings',
