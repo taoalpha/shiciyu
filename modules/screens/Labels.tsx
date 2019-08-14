@@ -1,5 +1,5 @@
 import React from "react";
-import { View } from "react-native";
+import { ScrollView , View } from "react-native";
 import { Words } from "../../constants";
 import { ListItem } from "react-native-elements";
 import poemService from "../../services/Poem";
@@ -7,7 +7,7 @@ import poemService from "../../services/Poem";
 export function Labels(props) {
     const labels = poemService.getAllLabels();
 
-    return (<View>
+    return (<ScrollView>
         {
             labels.map((label, i) => (
                 <ListItem
@@ -21,5 +21,5 @@ export function Labels(props) {
                 />
             ))
         }
-    </View>);
+    </ScrollView>);
 }
