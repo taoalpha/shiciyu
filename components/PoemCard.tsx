@@ -91,6 +91,7 @@ export function PoemCard(props) {
       } >
       <Icon
        containerStyle={styles.labelIcon}
+       iconStyle={{paddingHorizontal: 5, paddingVertical: 10}}
        name='label'
        color='white'
        onPress={() => {
@@ -106,12 +107,17 @@ export function PoemCard(props) {
         onBackdropPress={() => setLabelEditorOpen(false)}>
         <LabelEditor
           poem={currentPoem}
+          onLabelChange={(poem) => {
+            if (poem) setPoem({...poem});
+            else setPoem({...poemService.random()});
+          }}
         ></LabelEditor>
       </Overlay>
       )}
   
       <Icon
        containerStyle={styles.favoriteIcon}
+       iconStyle={{paddingHorizontal: 5, paddingVertical: 10}}
        name={currentPoem.isFavorite ? 'favorite' : 'favorite-border'}
        color={currentPoem.isFavorite ? 'red' : 'white'}
        onPress={() => {

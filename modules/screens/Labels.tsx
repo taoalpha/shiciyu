@@ -1,11 +1,18 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { ScrollView , View } from "react-native";
 import { Words } from "../../constants";
 import { ListItem } from "react-native-elements";
 import poemService from "../../services/Poem";
 
 export function Labels(props) {
-    const labels = poemService.getAllLabels();
+    const [labels, setLabels] = useState(poemService.getAllLabels());
+
+    useEffect(() => {
+        const listener = props.navigation.addListener("didFocus", () => {
+            setLabels([...poemService.getAllLabels()]);
+        });
+        return () => listener.remove();
+    }, [])
 
     return (<ScrollView>
         {

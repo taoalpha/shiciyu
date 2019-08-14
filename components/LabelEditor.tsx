@@ -41,6 +41,7 @@ export function LabelEditor(props) {
                                     onPress={() => {
                                         poemService.removeLabel(currentPoem, label).then(poem => {
                                             setPoem({ ...poem });
+                                            props.onLabelChange(null);
                                         })
                                     }}
                                 ></Icon>
@@ -57,6 +58,7 @@ export function LabelEditor(props) {
                     nativeEvent.text && nativeEvent.text.trim() && poemService.addLabel(currentPoem, nativeEvent.text.trim()).then(poem => {
                         setPoem({ ...poem });
                         setInputValue("");
+                        props.onLabelChange(poem);
                     })
                 }} />
         </ScrollView></View>);

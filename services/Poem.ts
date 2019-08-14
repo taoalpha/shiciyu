@@ -19,7 +19,7 @@ interface PoemHistory {
 interface OpinionsData {
   liked: PoemData[];
   hated: PoemData[];
-  labeled: {
+  labeled?: {
     [label: string]: PoemData[];
   }
 }
@@ -167,7 +167,7 @@ class PoemService {
     if (!this.opinions.labeled) return;
     Object.keys(this.opinions.labeled).forEach(label => {
       if (!this.opinions.labeled[label].length) {
-        delete this.opinions.labeled[label];
+        // delete this.opinions.labeled[label];
       } else {
         this.opinions.labeled[label].forEach(poem => {
           const poemHash = this.getHashKey(poem);
@@ -264,6 +264,9 @@ class PoemService {
   async removeLabel(poem: PoemData, label: string) {
     const hashKey = this.getHashKey(poem);
     this.opinions.labeled[label] = this.opinions.labeled[label].filter(p => this.getHashKey(p) !== hashKey);
+    if (this.currentActiveDBName === label) {
+      this.currentActiveDB = this.opinions.labeled[label];
+    }
     this.labelHashMap[hashKey] = this.labelHashMap[hashKey].filter(l => l !== label);
 
     await AsyncStorage.setItem("userOpinions", JSON.stringify(this.opinions));
@@ -271,7 +274,18 @@ class PoemService {
     return poem;
   }
 
+  // should only call when there is no data in that label
+  async deleteLabel(label: string) {
+    delete this.opinions.labeled[label];
+    await AsyncStorage.setItem("userOpinions", JSON.stringify(this.opinions));
+  }
+
+  isEmptyLabel(label) {
+    return this.opinions.labeled && this.opinions.labeled[label] && this.opinions.labeled[label].length;
+  }
+
   getAllLabels() {
+    if (!this.opinions.labeled) return [];
     return Object.keys(this.opinions.labeled).map(label => ({label, total: this.opinions.labeled[label].length}));
   }
 
